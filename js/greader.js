@@ -497,6 +497,7 @@ $(function() {
     return $("#settings-button-menu").toggle();
   });
   $("#settings-button-menu").children().eq(5).on("click", showSettingsPage);
+  $("#googleConnector").on("click", login);
   auto_height();
   setInterval(auto_height, 200);
   window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
