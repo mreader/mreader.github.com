@@ -167,26 +167,20 @@ addFeed = function() {
     alert("You have subscribed to " + url);
     return;
   }
-  return getJsonFeed(url, function(feed) {
-    var domainName;
+  return refreshFeed(url, function(feed, faviconUrl) {
+    var f, li;
+    f = {
+      title: feed.title,
+      type: "rss",
+      feedUrl: feed.feedUrl,
+      favicon: faviconUrl
+    };
+    li = generateFeed(f);
+    $("#sub-tree-item-0-main ul:first").append(li);
     $("#quick-add-bubble-holder").toggleClass("show");
     $("#quick-add-bubble-holder").toggleClass("hidden");
-    localStorage.setItem(url, JSON.stringify(feed));
-    domainName = feed.link.split("/")[2];
-    url = "http://" + domainName + "/favicon.ico";
-    return saveFavicon(url, domainName, function(faviconUrl) {
-      var f, li;
-      f = {
-        title: feed.title,
-        type: "rss",
-        feedUrl: feed.feedUrl,
-        favicon: faviconUrl
-      };
-      li = generateFeed(f);
-      $("#sub-tree-item-0-main ul:first").append(li);
-      feeds.push(f);
-      return localStorage.setItem("feeds", JSON.stringify(feeds));
-    });
+    feeds.push(f);
+    return localStorage.setItem("feeds", JSON.stringify(feeds));
   });
 };
 
@@ -237,7 +231,9 @@ generateFeed = function(feed) {
   li = $(sprintf('<li class="sub unselectable expanded unread">\n<div class="toggle sub-toggle toggle-d-2 hidden"></div>\n<a class="link" title="%s">\n <div style="background-image: url(%s); background-size:16px 16px" class="icon sub-icon icon-d-2 favicon">\n </div>\n <div class="name-text sub-name-text name-text-d-2 name sub-name name-d-2 name-unread">%s</div>\n <div class="unread-count sub-unread-count unread-count-d-2"></div>\n <div class="tree-item-action-container">\n <div class="action tree-item-action section-button section-menubutton goog-menu-button"></div>\n </div>\n </a>\n </li>', feed.feedUrl, feed.favicon, feed.title));
   li.find("a:first").click(function() {
     if (localStorage.getItem(feed.feedUrl) === null) {
-      return refreshFeed(feed.feedUrl);
+      return refreshFeed(feed.feedUrl, function(feed, faviconUrl) {
+        return showContent(feed.feedUrl);
+      });
     } else {
       return showContent(feed.feedUrl);
     }
@@ -349,14 +345,15 @@ toggleMenu = function(menu) {
   }
 };
 
-refreshFeed = function(feedUrl) {
+refreshFeed = function(feedUrl, cb) {
   return getJsonFeed(feedUrl, function(feed) {
     var domainName, url;
     localStorage.setItem(feedUrl, JSON.stringify(feed));
     domainName = feed.link.split("/")[2];
     url = "http://" + domainName + "/favicon.ico";
-    saveFavicon(url, domainName, function(faviconUrl) {});
-    return showContent(feed.feedUrl);
+    return saveFavicon(url, domainName, function(faviconUrl) {
+      return cb(feed, faviconUrl);
+    });
   });
 };
 
@@ -386,6 +383,9 @@ importFromOpml = function(evt) {
           return saveFavicon(url, domainName, function(faviconUrl) {
             var li;
             f.favicon = faviconUrl;
+            getJsonFeed(url, function(feed) {
+              return localStorage.setItem(url, JSON.stringify(feed));
+            });
             li = generateFeed(f);
             $("#sub-tree-item-0-main ul:first").append(li);
             feeds.push(f);
@@ -400,7 +400,7 @@ importFromOpml = function(evt) {
         for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
           sub_outline_str = _ref1[_j];
           sub_outline = $(sub_outline_str);
-          wrap_fun = function(sub_outline, f) {
+          wrap_fun = function(sub_outline, folder, f) {
             var domainName, url;
             domainName = sub_outline.attr("htmlUrl").split("/")[2];
             url = "http://" + domainName + "/favicon.ico";
@@ -417,7 +417,7 @@ importFromOpml = function(evt) {
               return ul.append(generateFeed(sub_f));
             });
           };
-          wrap_fun(sub_outline, f);
+          wrap_fun(sub_outline, folder, f);
         }
         $("#sub-tree-item-0-main ul:first").append(folder);
         feeds.push(f);
@@ -477,7 +477,9 @@ $(function() {
     return toggle($(this).parent());
   });
   $("#viewer-refresh").click(function() {
-    return refreshFeed(currentFeedUrl);
+    return refreshFeed(currentFeedUrl, function(feed, favcionUrl) {
+      return showContent(feed.feedUrl);
+    });
   });
   $('#opml-file').change(function() {
     return importFromOpml(event);
