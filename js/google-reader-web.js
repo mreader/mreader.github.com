@@ -67,8 +67,8 @@ validateToken = function(token) {
 };
 
 getSubscription = function() {
-  return $.ajax({
-    url: 'https://www.google.com/reader/api/0/subscription/list?output=json&access_token=' + acToken,
+  return $.getJSON({
+    url: 'https://www.google.com/reader/api/0/subscription/list?output=json',
     success: function(data) {
       return console.log(data);
     },
