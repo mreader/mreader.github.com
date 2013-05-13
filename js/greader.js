@@ -584,7 +584,7 @@ importFromGoogleReader = function(subs) {
 };
 
 (function($) {
-  var f, feed_ul, item, showSettingsPage, _i, _len, _results;
+  var f, feed_ul, item, showSettingsPage, _i, _len;
   showSettingsPage = function() {
     var tpl;
     tpl = '<div>\n    <iframe id="settings-frame" name="settings-frame" src="settings.html" \n            frameborder="0" scrolling="no" style="height: 600px;" class="loaded">\n    </iframe>\n</div>';
@@ -638,7 +638,6 @@ importFromGoogleReader = function(subs) {
     }, errorHandler);
   }
   feed_ul = $("#sub-tree-item-0-main ul:first");
-  _results = [];
   for (_i = 0, _len = subscriptions.length; _i < _len; _i++) {
     item = subscriptions[_i];
     if (item.type === "rss" && (item.categories === void 0 || item.categories.length === 0)) {
@@ -648,13 +647,13 @@ importFromGoogleReader = function(subs) {
       f = generateFolder(item);
       feed_ul.append(f);
       if (item.title === start_folder) {
-        _results.push(f.find("a:first").click());
-      } else {
-        _results.push(void 0);
+        f.find("a:first").click();
       }
-    } else {
-      _results.push(void 0);
     }
   }
-  return _results;
+  if (chrome.extension) {
+    return $("#import-data-area").append('<input type="button" id="googleConnector" value="Connect to Google Reader"></input>');
+  } else {
+    return $("import-data-area").append('<input type="file" name="opml-file" id="opml-file" size="40">');
+  }
 })(jQuery);
