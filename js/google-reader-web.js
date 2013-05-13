@@ -9,7 +9,7 @@ VALIDURL = 'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=';
 
 SCOPE = 'https://www.googleapis.com/auth/userinfo.profile https://www.google.com/reader/api';
 
-CLIENTID = '640115812452.apps.googleusercontent.com';
+CLIENTID = '640115812452-mk9muia2ldjp601bumj3mtiaemoce0qc.apps.googleusercontent.com';
 
 REDIRECT = 'http://reader.marboo.biz';
 
@@ -69,10 +69,9 @@ validateToken = function(token) {
 getSubscription = function() {
   return $.getJSON({
     url: 'https://www.google.com/reader/api/0/subscription/list?output=json',
-    success: function(data) {
-      return console.log(data);
-    },
     dataType: "jsonp"
+  }).done(function(data) {
+    return console.log(data);
   });
 };
 
