@@ -68,13 +68,13 @@ validateToken = function(token) {
 
 getSubscription = function() {
   return $.getJSON({
-    url: 'https://www.google.com/reader/api/0/subscription/list?output=json',
+    url: 'https://www.google.com/reader/api/0/subscription/list?output=json' + "&callback=?",
     dataType: "jsonp",
     success: function(data) {
         console.log(data);
-    console.log("******");
-    console.log(data);
-    return importFromGoogleReader(JSON.parse(data).subscriptions);
+        console.log("******");
+        console.log(data);
+        return importFromGoogleReader(JSON.parse(data).subscriptions);
     }
   });
 };
