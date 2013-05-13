@@ -624,7 +624,7 @@ importFromGoogleReader = function(subs) {
   $("#lhn-subscriptions-minimize").click(function() {
     return $("#lhn-subscriptions").toggleClass("section-minimized");
   });
-  $("#googleConnector").on("click", login2);
+  $("#googleConnector").on("click", login);
   $("#chrome-view-links span div:eq(1)").on("click", toggleThreeColumnView);
   $('.settings-button-container').on('click', function() {
     return $('#settings-button-menu').toggle();
