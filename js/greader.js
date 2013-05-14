@@ -584,7 +584,7 @@ importFromGoogleReader = function(subs) {
 };
 
 (function($) {
-  var $a, f, feed_ul, item, showSettingsPage, _i, _len, _results;
+  var $a, f, feed_ul, item, showSettingsPage, _i, _len;
   if (chrome.extension) {
     $("#import-data-area").append('<input type="button" id="googleConnector" size="1" style="position:absolute;opacity:0;filter:alpha(opacity=0);z-index:1000"></input>');
     $a = $("<a>从Google Reader导入订阅</a>");
@@ -650,6 +650,9 @@ importFromGoogleReader = function(subs) {
     code = e.keyCode ? e.keyCode : e.which;
     console.log(code);
     if (code === 13) {
+      $("#add-feed").click();
+    }
+    if (code === 13) {
       return $("#add-feed").click();
     }
   });
@@ -661,7 +664,6 @@ importFromGoogleReader = function(subs) {
     }, errorHandler);
   }
   feed_ul = $("#sub-tree-item-0-main ul:first");
-  _results = [];
   for (_i = 0, _len = subscriptions.length; _i < _len; _i++) {
     item = subscriptions[_i];
     if (item.type === "rss" && (item.categories === void 0 || item.categories.length === 0)) {
@@ -671,13 +673,23 @@ importFromGoogleReader = function(subs) {
       f = generateFolder(item);
       feed_ul.append(f);
       if (item.title === start_folder) {
-        _results.push(f.find("a:first").click());
-      } else {
-        _results.push(void 0);
+        f.find("a:first").click();
       }
-    } else {
-      _results.push(void 0);
     }
   }
-  return _results;
+  return $("body").bind('keypress', function(e) {
+    var code;
+    code = e.keyCode ? e.keyCode : e.which;
+    console.log(code);
+    if (code === 106) {
+      $("#current-entry").next().find(".collapsed").click();
+    }
+    if (code === 107) {
+      $("#current-entry").prev().find(".collapsed").click();
+    }
+    if (code === 102) {
+      $("body").toggleClass("fullscreen");
+      return $("body").toggleClass("lhn-hidden");
+    }
+  });
 })(jQuery);
