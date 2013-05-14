@@ -592,7 +592,7 @@ importFromGoogleReader = function(subs) {
       return $("#googleConnector").click();
     });
     $("#import-data-area").append($a);
-    $("#googleConnector").on("click", login2);
+    $("#googleConnector").on("click", login);
   } else {
     $("#import-data-area").append('<input type="file" name="opml-file" id="opml-file" size="40" style="position:absolute;opacity:0;filter:alpha(opacity=0);z-index:1000"></input>');
     $a = $("<a>从subscriptions.xml导入订阅</a>");
@@ -645,6 +645,14 @@ importFromGoogleReader = function(subs) {
     return $('#settings-button-menu').toggle();
   });
   $("#settings-button-menu .goog-menuitem-settings").on('click', showSettingsPage);
+  $('#quickadd').bind('keypress', function(e) {
+    var code;
+    code = e.keyCode ? e.keyCode : e.which;
+    console.log(code);
+    if (code === 13) {
+      return $("#add-feed").click();
+    }
+  });
   setInterval(auto_height, 200);
   window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
   if (window.requestFileSystem) {
