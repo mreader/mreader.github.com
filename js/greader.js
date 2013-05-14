@@ -584,7 +584,16 @@ importFromGoogleReader = function(subs) {
 };
 
 (function($) {
-  var f, feed_ul, item, showSettingsPage, _i, _len;
+  var f, feed_ul, item, showSettingsPage, _i, _len, _results;
+  if (chrome.extension) {
+    $("#import-data-area").append('<input type="button" id="googleConnector" value="Connect to Google Reader"></input>');
+    $("#googleConnector").on("click", login2);
+  } else {
+    $("#import-data-area").append('<input type="file" name="opml-file" id="opml-file" size="40" value="选择subscriptions.xml文件">');
+    $('#opml-file').change(function() {
+      return importFromOpml(event);
+    });
+  }
   showSettingsPage = function() {
     var tpl;
     tpl = '<div>\n    <iframe id="settings-frame" name="settings-frame" src="settings.html" \n            frameborder="0" scrolling="no" style="height: 600px;" class="loaded">\n    </iframe>\n</div>';
@@ -612,9 +621,6 @@ importFromGoogleReader = function(subs) {
       return showContent(feed.feedUrl);
     });
   });
-  $('#opml-file').change(function() {
-    return importFromOpml(event);
-  });
   $("#lhn-selectors-minimize").click(function() {
     return $("#lhn-selectors").toggleClass("section-minimized");
   });
@@ -624,7 +630,6 @@ importFromGoogleReader = function(subs) {
   $("#lhn-subscriptions-minimize").click(function() {
     return $("#lhn-subscriptions").toggleClass("section-minimized");
   });
-  $("#googleConnector").on("click", login);
   $("#chrome-view-links span div:eq(1)").on("click", toggleThreeColumnView);
   $('.settings-button-container').on('click', function() {
     return $('#settings-button-menu').toggle();
@@ -638,6 +643,7 @@ importFromGoogleReader = function(subs) {
     }, errorHandler);
   }
   feed_ul = $("#sub-tree-item-0-main ul:first");
+  _results = [];
   for (_i = 0, _len = subscriptions.length; _i < _len; _i++) {
     item = subscriptions[_i];
     if (item.type === "rss" && (item.categories === void 0 || item.categories.length === 0)) {
@@ -647,13 +653,13 @@ importFromGoogleReader = function(subs) {
       f = generateFolder(item);
       feed_ul.append(f);
       if (item.title === start_folder) {
-        f.find("a:first").click();
+        _results.push(f.find("a:first").click());
+      } else {
+        _results.push(void 0);
       }
+    } else {
+      _results.push(void 0);
     }
   }
-  if (chrome.extension) {
-    return $("#import-data-area").append('<input type="button" id="googleConnector" value="Connect to Google Reader"></input>');
-  } else {
-    return $("import-data-area").append('<input type="file" name="opml-file" id="opml-file" size="40">');
-  }
+  return _results;
 })(jQuery);
