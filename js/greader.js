@@ -584,12 +584,22 @@ importFromGoogleReader = function(subs) {
 };
 
 (function($) {
-  var f, feed_ul, item, showSettingsPage, _i, _len, _results;
+  var $a, f, feed_ul, item, showSettingsPage, _i, _len, _results;
   if (chrome.extension) {
-    $("#import-data-area").append('<input type="button" id="googleConnector" value="Connect to Google Reader"></input>');
+    $("#import-data-area").append('<input type="button" id="googleConnector" size="1" style="position:absolute;opacity:0;filter:alpha(opacity=0);z-index:1000"></input>');
+    $a = $("<a>从Google Reader导入订阅</a>");
+    $a.on("click", function() {
+      return $("#googleConnector").click();
+    });
+    $("#import-data-area").append($a);
     $("#googleConnector").on("click", login2);
   } else {
-    $("#import-data-area").append('<input type="file" name="opml-file" id="opml-file" size="40" value="选择subscriptions.xml文件">');
+    $("#import-data-area").append('<input type="file" name="opml-file" id="opml-file" size="40" style="position:absolute;opacity:0;filter:alpha(opacity=0);z-index:1000"></input>');
+    $a = $("<a>从subscriptions.xml导入订阅</a>");
+    $a.on("click", function() {
+      return $("#opml-file").click();
+    });
+    $("#import-data-area").append($a);
     $('#opml-file').change(function() {
       return importFromOpml(event);
     });
