@@ -69,8 +69,10 @@ toggleAddBox = function() {
 };
 
 toggleStar = function(obj, item) {
-  obj.find(".entry-icons div").toggleClass("item-star");
-  return obj.find(".entry-icons div").toggleClass("item-star-active");
+  obj.find("div.entry-icons div").toggleClass("item-star");
+  obj.find("div.entry-icons div").toggleClass("item-star-active");
+  obj.find("div.entry-actions span:first").toggleClass("item-star");
+  return obj.find("div.entry-actions span:first").toggleClass("item-star-active");
 };
 
 showDetail = function(obj, item) {
@@ -156,12 +158,20 @@ generateContentList = function(entries) {
     div = $(sprintf('<div class="entry entry-%s ril_marked"><div class="collapsed"><div class="entry-icons"><div class="item-star star link unselectable empty"></div></div><div class="entry-date">%s</div><div class="entry-main"><a class="entry-original" target="_blank" href="%s"></a><span class="entry-source-title">%s</span><div class="entry-secondary"><h2 class="entry-title">%s</h2><span class="entry-secondary-snippet"> - <span class="snippet">%s</span></span></div></div></div></div>', i, date, link, stitle, title, desc));
     i += 1;
     a = function(obj, args) {
-      div.find(".collapsed").click(function() {
+      obj.find(".collapsed").click(function() {
         return showDetail(obj, args);
       });
-      return div.find("div.entry-icons").click(function(e) {
+      obj.find("div.entry-icons").click(function(e) {
         toggleStar(obj, args);
         return e.stopPropagation();
+      });
+      obj.find("div.entry-actions span:first").on("click", function(e) {
+        return toggleStar(obj, args);
+      });
+      return obj.find("div.entry-actions span.read-state").on("click", function(e) {
+        $(this).toggleClass("read-state-not-kept-unread");
+        $(this).toggleClass("read-state-kept-unread");
+        return obj.toggleClass("read");
       });
     };
     a(div, item);
@@ -657,6 +667,15 @@ importFromGoogleReader = function(subs) {
   setInterval(auto_height, 200);
   $("div[role=button]").hover(function() {
     return $(this).toggleClass("jfk-button-hover");
+  });
+  $("div[role=listbox]").hover(function() {
+    return $(this).toggleClass("goog-flat-menu-button-hover");
+  });
+  $("#entries-up").on("click", function() {
+    return $("#current-entry").prev().find(".collapsed").click();
+  });
+  $("#entries-down").on("click", function() {
+    return $("#current-entry").next().find(".collapsed").click();
   });
   window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
   if (window.requestFileSystem) {
