@@ -76,6 +76,7 @@ toggleStar = function(obj, item) {
 showDetail = function(obj, item) {
   var content, date, desc, entry_actions, entry_container, link, title;
   obj.toggleClass("expanded");
+  obj.addClass("read");
   if (obj.attr("id") !== "current-entry") {
     if ($("#current-entry").hasClass("expanded")) {
       $("#current-entry").find("div:first").click();
@@ -650,13 +651,13 @@ importFromGoogleReader = function(subs) {
     code = e.keyCode ? e.keyCode : e.which;
     console.log(code);
     if (code === 13) {
-      $("#add-feed").click();
-    }
-    if (code === 13) {
       return $("#add-feed").click();
     }
   });
   setInterval(auto_height, 200);
+  $("div[role=button]").hover(function() {
+    return $(this).toggleClass("jfk-button-hover");
+  });
   window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
   if (window.requestFileSystem) {
     window.requestFileSystem(window.TEMPORARY, 100 * 1024 * 1024, function(filesystem) {

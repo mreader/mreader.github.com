@@ -7,7 +7,7 @@ OAUTHURL = 'https://accounts.google.com/o/oauth2/auth?';
 
 VALIDURL = 'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=';
 
-SCOPE = 'https://www.googleapis.com/auth/userinfo.profile https://www.google.com/reader/api';
+SCOPE = 'https://www.googleapis.com/auth/userinfo.profile https://www.google.com/reader/api https://www.googleapis.com/auth/drive.file';
 
 CLIENTID = '640115812452.apps.googleusercontent.com';
 
