@@ -660,7 +660,7 @@ importFromGoogleReader = function(subs) {
     return $("#lhn-subscriptions").toggleClass("section-minimized");
   });
   $("#chrome-view-links span div:eq(1)").on("click", toggleThreeColumnView);
-  $('.settings-button-container').on('click', function() {
+  $('#settings-button-container').on('click', function() {
     return $('#settings-button-menu').toggle();
   });
   $("#settings-button-menu .goog-menuitem-settings").on('click', showSettingsPage);
